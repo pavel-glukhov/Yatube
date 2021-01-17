@@ -8,7 +8,8 @@ from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.urls import reverse
-from posts.models import Group, Post, Follow
+
+from posts.models import Follow, Group, Post
 
 
 class PostsViewTests(TestCase):
@@ -152,10 +153,10 @@ class PostsViewTests(TestCase):
 
         for expected, value in context_edit_page.items():
             with self.subTest():
-                self.assertEqual(value, expected, f'Данные переданные'
-                                                  f' в context не'
-                                                  f' соответствуют'
-                                                  f' записям')
+                self.assertEqual(value, expected, 'Данные переданные'
+                                                  ' в context не'
+                                                  ' соответствуют'
+                                                  ' записям')
 
     def test_context_in_post_id_page(self):
         """Тестирование context для страницы индивидуального поста"""
@@ -175,10 +176,10 @@ class PostsViewTests(TestCase):
 
         for expected, value in context_edit_page.items():
             with self.subTest():
-                self.assertEqual(value, expected, f'Данные переданные'
-                                                  f' в context не'
-                                                  f' соответствуют'
-                                                  f' записям')
+                self.assertEqual(value, expected, 'Данные переданные'
+                                                  ' в context не'
+                                                  ' соответствуют'
+                                                  ' записям')
 
     def test_post_added_in_index_page(self):
         """Тестирование наличия поста на главной странице сайта"""
@@ -291,12 +292,14 @@ class FollowUserTest(TestCase):
         # проверим содержание Context страницы follow_index пользователя
         # auth_client_follower и убедимся, что они имеются в ленте
         self.assertIn(posts.get(),
-                      response_follower.context['paginator'].object_list)
+                      response_follower.context['paginator'].object_list,
+                      'Запись отсутствует на странице подписок пользователя')
 
         # проверим содержание Context страницы follow_index пользователя
         # auth_client_author и убедимся, что записи в ленте не имеется
         self.assertNotIn(posts.get(),
-                         response_author.context['paginator'].object_list)
+                         response_author.context['paginator'].object_list,
+                         'Запись добавлена к неверному пользователю.')
 
 
 class PaginatorViewsTest(TestCase):
@@ -380,9 +383,9 @@ class PostImageViewTest(TestCase):
         expected = f'posts/{self.uploaded.name}'
 
         self.assertEqual(response_data_image,
-                         expected, f'Изображение переданные'
-                                   f' в context страницы index'
-                                   f' не соответствует загруженному')
+                         expected, 'Изображение переданные'
+                                   ' в context страницы index'
+                                   ' не соответствует загруженному')
 
     def test_context_profile_page(self):
         """Проверяем context страницы profile на наличие изображения"""
@@ -395,16 +398,17 @@ class PostImageViewTest(TestCase):
         expected = f'posts/{self.uploaded.name}'
 
         self.assertEqual(response_data_image,
-                         expected, f'Изображение переданные'
-                                   f' в context страницы profile'
-                                   f' не соответствует загруженному')
+                         expected, 'Изображение переданные'
+                                   ' в context страницы profile'
+                                   ' не соответствует загруженному')
 
     def test_context_group_page(self):
         """Проверяем context страницы group на наличие изображения"""
         response = self.guest_client.get(reverse('group',
                                                  kwargs={'slug':
-                                                             'test-group'
+                                                         'test-group'
                                                          }))
+
         response_data_image = response.context['page'][0].image
         expected = f'posts/{self.uploaded.name}'
 

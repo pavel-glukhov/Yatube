@@ -15,7 +15,7 @@
                         </div>
                         <div class="h3 text-muted">
                             <!-- username автора -->
-                            <a href="{% url 'profile' profile %}">@{{ profile}}</a>
+                            <a href="{% url 'profile' profile %}">@{{ profile }}</a>
 
                             <!--подписаться -->
                             {% if user.is_authenticated and profile.username != user.username %}

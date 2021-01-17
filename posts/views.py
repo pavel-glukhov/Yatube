@@ -1,10 +1,11 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+
 from .forms import CommentForm, PostForm
-from .models import Comment, Group, Post, User, Follow
-from django.conf import settings
+from .models import Comment, Follow, Group, Post, User
 
 
 # функция педженатора
@@ -87,6 +88,7 @@ def post_edit(request, username, post_id):
                                                         })
 
 
+# комментарии к посту
 @login_required()
 def add_comment(request, username, post_id):
     post = Post.objects.get(pk=post_id)
@@ -101,21 +103,6 @@ def add_comment(request, username, post_id):
 
     return redirect(reverse('post', kwargs={'username': username,
                                             'post_id': post_id}))
-
-
-# 404
-def page_not_found(request, exception):
-    return render(request,
-                  'misc/404.html',
-                  {'path': request.path},
-                  status=404)
-
-
-# 500
-def server_error(request):
-    return render(request,
-                  'misc/500.html',
-                  status=500)
 
 
 # страница подписки
@@ -133,7 +120,7 @@ def follow_index(request):
 @login_required
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
-    # если пользователь не автор и подписка не существует, создадим запись
+    # если пользователь не автор и запись отсутствует, создадим ее
     if request.user != author and not Follow.objects.filter(
             user=request.user, author=author).exists():
         Follow.objects.create(user=request.user, author=author)
@@ -170,3 +157,18 @@ def profile(request, username):
         'following': following,
         'followers_list': followers_list
     })
+
+
+# 404
+def page_not_found(request, exception):
+    return render(request,
+                  'misc/404.html',
+                  {'path': request.path},
+                  status=404)
+
+
+# 500
+def server_error(request):
+    return render(request,
+                  'misc/500.html',
+                  status=500)

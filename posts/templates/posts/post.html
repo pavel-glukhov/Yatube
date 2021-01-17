@@ -1,22 +1,24 @@
 {% extends 'base.html' %}
-{% block title %} Пост пользователя {{ post.author.get_full_name }} {% endblock %}
-{% block header %} Пост пользователя {{ post.author.get_full_name }} {% endblock %}
+{% block title %} Пост пользователя
+    {{ post.author.get_full_name }} {% endblock %}
+{% block header %} Пост пользователя
+    {{ post.author.get_full_name }} {% endblock %}
 {% block content %}
-<main role="main" class="container">
-    <div class="row">
+    <main role="main" class="container">
+        <div class="row">
             <div class="col-md-3 mb-3 mt-1">
                 <div class="card">
-                        <div class="card-body">
-                                <div class="h2">
-                                    <!-- Имя автора -->
-                                        {{ post.author.get_full_name}}
-                                </div>
-                                <div class="h3 text-muted">
-                                     <!-- username автора -->
-                                     <a href="{% url 'profile' post.author %}">@{{ post.author.username}}</a>
-                                </div>
+                    <div class="card-body">
+                        <div class="h2">
+                            <!-- Имя автора -->
+                            {{ post.author.get_full_name }}
                         </div>
-                        <ul class="list-group list-group-flush">
+                        <div class="h3 text-muted">
+                            <!-- username автора -->
+                            <a href="{% url 'profile' post.author %}">@{{ post.author.username }}</a>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <div class="h6 text-muted">
                                 Подписчиков: {{ post.author.following.count }}
@@ -30,15 +32,15 @@
                         </li>
                         <li class="list-group-item">
 
-                                </li>
-                        </ul>
+                        </li>
+                    </ul>
                 </div>
-        </div>
+            </div>
 
-        <div class="col-md-9">
-        {% include "posts/post_item.html" with post=post %}
-            {% include 'posts/comments.html' %}
-     </div>
-    </div>
-</main>
+            <div class="col-md-9">
+                {% include "posts/post_item.html" with post=post %}
+                {% include 'posts/comments.html' %}
+            </div>
+        </div>
+    </main>
 {% endblock %}

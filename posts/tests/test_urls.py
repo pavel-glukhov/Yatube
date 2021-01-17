@@ -60,11 +60,18 @@ class PostURLTests(TestCase):
             }
         )
 
+        self.reverse_name_comment = reverse(
+            'add_comment', kwargs={
+                'username': self.AUTH_USER_NAME_AUTHOR,
+                'post_id': 1
+            }
+        )
+
         self.templates_url_names = {
             'index.html': self.reverse_name_index,
             'posts/group.html': self.reverse_name_group,
             'posts/profile.html': self.reverse_name_profile,
-            'posts/post_new_edit.html': self.reverse_name_post_edit
+            'posts/post_new_edit.html': self.reverse_name_post_edit,
         }
 
         # Словарь для проверки доступности страниц для автор-ных пользователей
@@ -84,20 +91,23 @@ class PostURLTests(TestCase):
             self.reverse_name_profile: 200,
             self.reverse_name_post: 200,
             self.reverse_name_post_edit: 200,
+            self.reverse_name_comment: 200,
+
         }
 
     def test_url_new_post_guest_users(self):
         """Тестирование URL-New_Post для неавторизованных пользователей."""
         # Удостоверися, что редирект на sign up работает корректно
+        # и гости не смогу получить доступ к новым постам
         response = self.guest_client.get(self.reverse_name_new_post,
                                          follow=True)
         self.assertRedirects(
             response, '/auth/login/?next=/new/')
 
-    """Проверим страницу редактирования постов
-        Необходимо убедиться, что доступ имеется только у автора поста.
-        Гость должен быть перенаправлен на страницу авторизации, 
-        а авторизованный пользователь не являющийся владельцем, получит 403"""
+        # Проверим страницу редактирования постов
+        # Необходимо убедиться, что доступ имеется только у автора поста.
+        # Гость должен быть перенаправлен на страницу авторизации,
+        # а авторизованный пользователь не являющийся владельцем, получит 403
 
     def test_url_edit_post_guest_users(self):
         """Тестирование URL: Edit Post для гостей"""
@@ -106,6 +116,16 @@ class PostURLTests(TestCase):
         self.assertRedirects(
             response, f'/auth/login/?next=/{self.AUTH_USER_NAME_AUTHOR}/'
                       f'{self.post.pk}/edit/'
+        )
+
+    def test_url_comment_post_guest_users(self):
+        """Тестирование URL: Comment для гостей сайта"""
+        # Удостоверися, что редирект на sign up работает корректно и comment
+        # не будут доступен для неавторизованных пользователей
+        response = self.guest_client.get(self.reverse_name_comment)
+        self.assertRedirects(
+            response, f'/auth/login/?next=/{self.AUTH_USER_NAME_AUTHOR}/'
+                      f'{self.post.pk}/comment'
         )
 
     def test_url_edit_post_not_owner(self):

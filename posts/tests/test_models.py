@@ -66,4 +66,3 @@ class PostModelTest(TestCase):
             метод __str__ должен возвращать название группы"""
         self.assertEqual(self.group.title, self.group.__str__(),
                          'Метод __str__ не возвращает название группы')
-
