@@ -223,8 +223,8 @@ class PostsViewTests(TestCase):
 
 # тест подписывания пользователей друг на друга
 class FollowUserTest(TestCase):
-    FOLLOWER_POST_USER = 'TestUser_02'
-    AUTHOR_POST_USER = 'TestUser_01'
+    FOLLOWER_POST_USER = 'TestUser_01'
+    AUTHOR_POST_USER = 'TestUser_02'
 
     def setUp(self):
         # создадим 2х пользователей.
