@@ -91,7 +91,7 @@ def post_edit(request, username, post_id):
 # комментарии к посту
 @login_required()
 def add_comment(request, username, post_id):
-    post = Post.objects.get(pk=post_id)
+    post = get_object_or_404(Post, pk=post_id)
     form = CommentForm(request.POST or None)
     if request.GET or not form.is_valid():
         return post_view(request, username, post_id)
@@ -131,8 +131,9 @@ def profile_follow(request, username):
 # отписывание от пользователя
 @login_required
 def profile_unfollow(request, username):
-    author = get_object_or_404(User, username=username)
-    follower = Follow.objects.filter(user=request.user, author=author)
+    follower = Follow.objects.filter(
+        author__username=username).select_related('follower'
+                                                  )
     if follower.exists():
         follower.delete()
     return redirect('profile', username=username)
