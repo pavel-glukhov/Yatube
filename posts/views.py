@@ -54,13 +54,17 @@ def post_view(request, username, post_id):
     author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, pk=post_id, author=author)
     comments = Comment.objects.filter(post_id=post_id)
+    followers_count = Follow.objects.filter(
+        user__username=username).select_related('follower').count()
     followers_list = Follow.objects.filter(author=author)
     return render(request, 'posts/post.html', {
         'post': post,
         'author': author,
         'form': form,
         'comments': comments,
-        'followers_list': followers_list
+        'followers_list': followers_list,
+        'follow_count': followers_count,
+
     })
 
 
@@ -147,6 +151,8 @@ def profile(request, username):
             Follow.objects.filter(user=request.user, author=author).exists():
         following = True
     # лист подписчиков
+    followers_count = Follow.objects.filter(
+        user__username=username).select_related('follower').count()
     followers_list = Follow.objects.filter(author=author)
     post_list = author.posts.all()
     page, paginator = post_paginator(request, post_list)
@@ -156,7 +162,8 @@ def profile(request, username):
         'paginator': paginator,
         'profile': author,
         'following': following,
-        'followers_list': followers_list
+        'followers_list': followers_list,
+        'followers_count': followers_count,
     })
 
 
