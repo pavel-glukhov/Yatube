@@ -142,8 +142,7 @@ def profile_follow(request, username):
 @login_required
 def profile_unfollow(request, username):
     follower = Follow.objects.filter(
-        author__username=username).select_related('follower'
-                                                  )
+        author__username=username).select_related('follower')
     if follower.exists():
         follower.delete()
     return redirect('profile', username=username)
