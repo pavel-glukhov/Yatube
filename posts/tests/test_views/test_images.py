@@ -51,6 +51,8 @@ class PostImageViewTest(TestCase):
 
     def setUp(self):
         self.guest_client = Client()
+        self.authorized_client = Client()
+        self.authorized_client.force_login(self.user)
 
     def test_context_index_page(self):
         """Проверяем context страницы index на наличие изображения"""
@@ -111,3 +113,19 @@ class PostImageViewTest(TestCase):
                                    ' в context страницы post'
                                    ' не соответствует загруженному'
                          )
+
+    def test_create_post_with_image(self):
+        """Проверка создания записи содержащая картинку"""
+
+        form_data = {
+            'text': 'Тестовый текст',
+            'group': self.group.id,
+            'image': self.uploaded.name,
+        }
+        response = self.authorized_client.post(
+            reverse('new_post'),
+            data=form_data,
+            follow=True
+        )
+        # при успешном создании записи произойдет редирект на гравную страницу
+        self.assertRedirects(response, reverse('index'))

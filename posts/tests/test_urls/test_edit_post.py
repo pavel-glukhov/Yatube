@@ -47,7 +47,7 @@ class EditURLTests(TestCase):
                 'post_id': self.post.pk
             }
         )
-        
+
     def test_url_edit_post_not_owner(self):
         """Тестирование URL: Edit Post для авторизованного невладельца поста"""
         response = self.authorized_client_reader.get(

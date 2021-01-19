@@ -34,6 +34,7 @@ class EditURLTests(TestCase):
         """Тестирование URL-New_Post для неавторизованных пользователей."""
         # Удостоверися, что редирект на sign up работает корректно
         # и гости не смогу получить доступ к новым постам
+
         response = self.guest_client.get(self.reverse_name_new_post,
                                          follow=True
                                          )

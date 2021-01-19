@@ -38,7 +38,7 @@ def group_post(request, slug):
 # страница для создания новых постов
 @login_required
 def new_post(request):
-    form = PostForm(request.POST or None)
+    form = PostForm(request.POST or None, files=request.FILES or None)
     if request.GET or not form.is_valid():
         return render(request, 'posts/post_new_edit.html', {'form': form})
 
@@ -55,7 +55,7 @@ def post_view(request, username, post_id):
     post = get_object_or_404(Post, pk=post_id, author=author)
     comments = Comment.objects.filter(post_id=post_id)
     followers_count = Follow.objects.filter(
-        user__username=username).select_related('follower').count()
+        author__username=username).select_related('follower').count()
     followers_list = Follow.objects.filter(author=author)
     return render(request, 'posts/post.html', {
         'post': post,
@@ -63,7 +63,7 @@ def post_view(request, username, post_id):
         'form': form,
         'comments': comments,
         'followers_list': followers_list,
-        'follow_count': followers_count,
+        'followers_count': followers_count,
 
     })
 
@@ -109,14 +109,20 @@ def add_comment(request, username, post_id):
                                             'post_id': post_id}))
 
 
-# страница подписки
+# страница подписанных авторов
 @login_required
 def follow_index(request):
-    post_list = Post.objects.filter(author__following__user=request.user)
+
+    follow = Follow.objects.filter(
+        user__username=request.user).select_related(
+        'user').values_list('author_id')
+
+    post_list = Post.objects.filter(author__in=follow)
+
     page, paginator = post_paginator(request, post_list)
     return render(request, "follow.html", {
         "page": page,
-        "paginator": paginator
+        "paginator": paginator,
     })
 
 
@@ -152,7 +158,7 @@ def profile(request, username):
         following = True
     # лист подписчиков
     followers_count = Follow.objects.filter(
-        user__username=username).select_related('follower').count()
+        author__username=username).select_related('follower').count()
     followers_list = Follow.objects.filter(author=author)
     post_list = author.posts.all()
     page, paginator = post_paginator(request, post_list)
