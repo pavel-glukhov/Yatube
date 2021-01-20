@@ -115,7 +115,7 @@ def follow_index(request):
 
     follow = Follow.objects.filter(
         user__username=request.user).select_related(
-        'user').values_list('author_id')
+        'author').values_list('author_id')
 
     post_list = Post.objects.filter(author__in=follow)
 
