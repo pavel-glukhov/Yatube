@@ -6,6 +6,7 @@
     <div class="container">
         <!-- Вывод ленты записей -->
         {% include 'menu.html' %}
+
     {% cache 20 index_page %}
         {% for post in page %}
             {% include "posts/post_item.html" with post=post %}

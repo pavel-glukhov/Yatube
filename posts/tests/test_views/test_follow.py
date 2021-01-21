@@ -36,7 +36,7 @@ class FollowUserViewTest(TestCase):
 
     def test_authorized_user_follow_to_other_user(self):
         """Тестирование подписывания на пользователей"""
-        self.auth_client_follower.post(reverse(
+        self.auth_client_follower.get(reverse(
             'profile_follow',
             kwargs={
                 'username': self.user_not_follower
@@ -63,7 +63,7 @@ class FollowUserViewTest(TestCase):
         """Тестирование на правильность работы подписывания на пользователя"""
 
         # подпишем пользователя на auth_client_author
-        self.auth_client_follower.post(reverse(
+        self.auth_client_follower.get(reverse(
             'profile_follow',
             kwargs={
                 'username': self.user_not_follower
