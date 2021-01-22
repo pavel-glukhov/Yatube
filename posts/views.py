@@ -112,10 +112,9 @@ def add_comment(request, username, post_id):
 # страница подписанных авторов
 @login_required
 def follow_index(request):
-
-    follow = Follow.objects.filter(
-        user__username=request.user).select_related(
-        'author').values_list('author_id')
+    follow = Follow.objects.filter(user__username=request.user
+                                   ).select_related('author'
+                                                    ).values_list('author_id')
 
     post_list = Post.objects.filter(author__in=follow)
 
@@ -131,9 +130,8 @@ def follow_index(request):
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
     # если пользователь не автор и запись отсутствует, создадим ее
-    if request.user != author and not Follow.objects.filter(
-            user=request.user, author=author).exists():
-        Follow.objects.create(user=request.user, author=author)
+    if request.user != author:
+        Follow.objects.get_or_create(user=request.user, author=author)
 
     return redirect('profile', username=username)
 
@@ -142,6 +140,7 @@ def profile_follow(request, username):
 @login_required
 def profile_unfollow(request, username):
     follower = Follow.objects.filter(
+        user__username=request.user,
         author__username=username).select_related('follower')
     if follower.exists():
         follower.delete()
@@ -152,9 +151,10 @@ def profile_unfollow(request, username):
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     following = False
-    if request.user.is_authenticated and \
-            Follow.objects.filter(user=request.user, author=author).exists():
+    if (request.user.is_authenticated and Follow.objects.filter(
+            user=request.user, author=author).exists()):
         following = True
+
     # лист подписчиков
     followers_count = Follow.objects.filter(
         author__username=username).select_related('follower').count()
