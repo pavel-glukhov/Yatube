@@ -15,8 +15,6 @@ ALLOWED_HOSTS = [
 
 INSTALLED_APPS = [
     'users',
-    'posts',
-    'about',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,6 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sorl.thumbnail',
     'debug_toolbar',
+
+    'posts',
+    'about',
 
 ]
 
@@ -104,7 +105,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
-LOGOUT_REDIRECT_URL = 'index'
+
 
 # Email emulation
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'

@@ -16,8 +16,9 @@
 </head>
 
 <body>
-{% include 'nav.html' %}
+{% load cache %}
 
+{% include 'nav.html' %}
 <main>
     <div class="container">
         <h1>{% block header %}The Last Social Media You'll Ever
@@ -27,7 +28,9 @@
         {% endblock %}
     </div>
 </main>
+{% cache 1000 index_page %}
 {% include 'footer.html' %}
+{% endcache %}
 </body>
 
 </html>
