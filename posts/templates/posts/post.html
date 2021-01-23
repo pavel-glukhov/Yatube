@@ -6,38 +6,8 @@
 {% block content %}
     <main role="main" class="container">
         <div class="row">
-            <div class="col-md-3 mb-3 mt-1">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="h2">
-                            <!-- Имя автора -->
-                            {{ post.author.get_full_name }}
-                        </div>
-                        <div class="h3 text-muted">
-                            <!-- username автора -->
-                            <a href="{% url 'profile' post.author %}">@{{ post.author.username }}</a>
-                        </div>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <div class="h6 text-muted">
-                                Подписчиков: {{ follow_count }}
-                                <br/>
-                                Подписан: {% if followers_list %}
-                                {% for follower in followers_list %}
-                                    <a href="{% url 'profile' follower.user %}">@{{ follower.user }}</a>
-                                {% endfor %}
-                            {% else %}Нет подписчиков{% endif %}
-                            </div>
-                        </li>
-                        <li class="list-group-item">
 
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col-md-9">
+            <div class="col-md-12">
 
                 {% include "posts/post_item.html" with post=post %}
                 {% include 'posts/comments.html' %}

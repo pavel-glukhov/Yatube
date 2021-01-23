@@ -1,6 +1,7 @@
 <!-- templates/about/author.html -->
 {% extends "base.html" %}
-{% block title %}Об авторе проекта{% endblock %}
+{% block title %}О технологиях{% endblock %}
+{% block header %}О технологиях{% endblock %}
 {% block content %}
 {% load user_filters %}
 {% load static %}
@@ -8,25 +9,10 @@
       <div class="row">
           <!-- Левый вспомогательный блок -->
           <div class="col-md-3 mb-3 mt-1">
-              <div class="card">
-                  <div class="card-body">
-                      <ul class="list-group list-group-flush">
-                          <li class="list-group-item">
-                              <div class="h3">
-                                  О Технологиях
-                              </div>
-                          </li>
-                          <li class="list-group-item">
-                              <div class="h6 text-muted">
-                                  Полезно и коротко
-                              </div>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
+
           </div>
           <!-- Тело страницы -->
-          <div class="col-md-9">
+          <div class="col-md-12 border">
               <div class="card-body">
                   <div class="card-text">
                       <p>А здесь о технологиях. </p>

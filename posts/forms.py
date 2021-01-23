@@ -1,5 +1,5 @@
 from django import forms
-
+from django.forms import Textarea
 from .models import Comment, Post
 
 
@@ -19,6 +19,9 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text',)
+        widgets = {
+            'text': Textarea(attrs={'cols': 6, 'rows': 3}),
+        }
 
     def clean_text(self):
         data = self.cleaned_data['text']

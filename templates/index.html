@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% block title %} Послдение обновления на сайте {% endblock %}
-{% block header %} Послдение обновления на сайте {% endblock %}
+{% block title %} Последние обновления на сайте {% endblock %}
+{% block header %} Последние обновления на сайте {% endblock %}
 {% load cache %}
 {% block content %}
     <div class="container">
@@ -11,12 +11,12 @@
         {% for post in page %}
             {% include "posts/post_item.html" with post=post %}
         {% endfor %}
-
+{% endcache %}
     </div>
 
     <!-- Вывод паджинатора -->
     {% if page.has_other_pages %}
         {% include "paginator.html" with items=page paginator=paginator %}
     {% endif %}
-          {% endcache %}
+
 {% endblock %}

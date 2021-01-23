@@ -1,6 +1,32 @@
 <!-- Форма добавления комментария -->
 {% load user_filters %}
 
+<!-- Комментарии -->
+{% for item in comments %}
+    <div class="media card mb-2">
+        <div class="media-body card-body">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <a href="{% url 'profile' item.author.username %}"
+                       name="comment_{{ item.id }}">
+                        {{ item.author.get_full_name }}
+                    </a>
+                </div>
+
+                <div class="col-md-12">
+                    {{ item.created }}
+                </div>
+            </div>
+<br>
+            <p>{{ item.text | linebreaksbr }}</p>
+
+
+        </div>
+
+    </div>
+{% endfor %}
+
 {% if user.is_authenticated %}
     <div class="card my-4">
         <form method="post"
@@ -18,17 +44,3 @@
     </div>
 {% endif %}
 
-<!-- Комментарии -->
-{% for item in comments %}
-    <div class="media card mb-4">
-        <div class="media-body card-body">
-            <h5 class="mt-0">
-                <a href="{% url 'profile' item.author.username %}"
-                   name="comment_{{ item.id }}">
-                    {{ item.author.username }}
-                </a>
-            </h5>
-            <p>{{ item.text | linebreaksbr }}</p>
-        </div>
-    </div>
-{% endfor %}
