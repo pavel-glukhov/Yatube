@@ -1,20 +1,24 @@
 {% extends 'base.html' %}
 {% block title %} Страница пользователя
-    {{ author.get_full_name }} {% endblock %}
-{% block header %} Страница пользователя {% endblock %}
+    {{ profile.get_full_name }} {% endblock %}
 {% block content %}
     {% load thumbnail %}
-    <main role="main" class="container">
-        <div class="row">
-            <div class="col-md-3 mb-3 mt-1">
-                {% include "posts/post_profile_card.html" %}
+    <div class="border">
+        <div class="card-header d-flex justify-content-center"><H4> Страница
+            пользователя {{ profile.get_full_name }}</H4></div>
+        <main role="main" class="container">
+            <div class="row">
+                <div class="col-md-3 mb-3 mt-1">
+                    {% include "posts/post_profile_card.html" %}
+                </div>
+                <div class="col-md-9">
+
+                    {% for post in page %}
+                        {% include "posts/post_item.html" with post=post %}
+                    {% endfor %}
+                    {% include "paginator.html" %}
+                </div>
             </div>
-            <div class="col-md-8">
-                {% for post in page %}
-                    {% include "posts/post_item.html" with post=post %}
-                {% endfor %}
-                {% include "paginator.html" %}
-            </div>
-        </div>
+    </div>
     </main>
 {% endblock %}

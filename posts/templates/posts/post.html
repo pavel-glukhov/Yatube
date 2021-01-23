@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
-{% block title %} Пост пользователя
-    {{ post.author.get_full_name }} {% endblock %}
-{% block header %} Пост пользователя
-    {{ post.author.get_full_name }} {% endblock %}
+{% block title %} Пост пользователя {{ post.author.get_full_name }} {% endblock %}
 {% block content %}
+
+              <div class="card-header d-flex justify-content-center ">  <H4> Запись пользователя {{ post.author.get_full_name}}</H4></div>
     <main role="main" class="container">
         <div class="row">
 
-            <div class="col-md-12">
+            <div >
 
                 {% include "posts/post_item.html" with post=post %}
                 {% include 'posts/comments.html' %}
