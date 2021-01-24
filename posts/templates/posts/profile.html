@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block title %} Страница пользователя
-    {{ profile.get_full_name }} {% endblock %}
+    {{ post.author.get_full_name }} {% endblock %}
 {% block content %}
     {% load thumbnail %}
     <div class="border">
         <div class="card-header d-flex justify-content-center"><H4> Страница
-            пользователя {{ profile.get_full_name }}</H4></div>
+            пользователя {{ post.author.get_full_name }}</H4></div>
         <main role="main" class="container">
             <div class="row">
                 <div class="col-md-3 mb-3 mt-1">

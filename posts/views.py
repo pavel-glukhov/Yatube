@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .forms import CommentForm, PostForm
-from .models import Comment, Follow, Group, Post, User
+from .models import Follow, Group, Post, User
 from django.views.decorators.cache import cache_page
 
 
@@ -19,7 +19,8 @@ def post_paginator(request, post_list):
 
 @cache_page(20)
 def index(request):
-    post_list = Post.objects.select_related('group')
+    post_list = Post.objects.select_related(
+        "group", "author",).prefetch_related("comments")
     page, paginator = post_paginator(request, post_list)
     return render(request,
                   'index.html', {'page': page, 'paginator': paginator})
@@ -55,17 +56,12 @@ def post_view(request, username, post_id):
     form = CommentForm(request.POST or None)
     author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, pk=post_id, author=author)
-    comments = Comment.objects.filter(post_id=post_id)
-    followers_count = Follow.objects.filter(
-        author__username=username).select_related('follower').count()
-    followers_list = Follow.objects.filter(author=author)
+    comments = post.comments.select_related('author')
     return render(request, 'posts/post.html', {
         'post': post,
         'author': author,
         'form': form,
         'comments': comments,
-        'followers_list': followers_list,
-        'followers_count': followers_count,
 
     })
 
@@ -73,13 +69,13 @@ def post_view(request, username, post_id):
 # страница редактирования постов. Доступ только для авторизованных.
 @login_required()
 def post_edit(request, username, post_id):
-    author = get_object_or_404(User, username=username)
-    post = get_object_or_404(Post, author=author, id=post_id)
     # проверка на владельца поста.
-    if request.user != author:
+    if username != request.user.username:
         return redirect(reverse('post', kwargs={'username': username,
                                                 "post_id": post_id
                                                 }))
+    author = get_object_or_404(User, username=username)
+    post = get_object_or_404(Post, author=author, id=post_id)
 
     form = PostForm(request.POST or None, files=request.FILES or None,
                     instance=post)
@@ -158,10 +154,10 @@ def profile(request, username):
         following = True
 
     # лист подписчиков
-    followers_count = Follow.objects.filter(
-        author__username=username).select_related('follower').count()
+
     followers_list = Follow.objects.filter(author=author)
-    post_list = author.posts.all()
+    followers_count = len(followers_list)
+    post_list = author.posts.select_related('author')
     page, paginator = post_paginator(request, post_list)
 
     return render(request, 'posts/profile.html', {
