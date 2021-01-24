@@ -16,7 +16,6 @@
 </head>
 
 <body>
-{% load cache %}
 
 {% include 'nav.html' %}
 <main>
@@ -27,9 +26,9 @@
         {% endblock %}
     </div>
 </main>
-{% cache 1000 index_page %}
+
 {% include 'footer.html' %}
-{% endcache %}
+
 </body>
 
 </html>

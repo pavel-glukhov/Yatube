@@ -3,16 +3,16 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 from posts.models import Group, Post
+from django.core.cache import cache
 
 
-class CommentURLTests(TestCase):
+class TemplatesURLTests(TestCase):
     AUTH_USER_NAME_AUTHOR = 'TestUser1'
     AUTH_USER_NAME_GUEST = 'TestUser2'
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
         cls.user = get_user_model().objects.create(
             username=cls.AUTH_USER_NAME_AUTHOR)
 
@@ -64,10 +64,11 @@ class CommentURLTests(TestCase):
 
     def test_url_correct_templates(self):
         """Тестирование доступности шаблонов по reverse name"""
-
         for template, reverse_name in self.templates_url_names.items():
             with self.subTest(reverse_name=reverse_name):
+                cache.clear()
                 response = self.authorized_client.get(reverse_name)
+
                 self.assertTemplateUsed(response, template,
                                         f'Проблема с шаблоном: {template}'
                                         f' reverse name: {reverse_name} '

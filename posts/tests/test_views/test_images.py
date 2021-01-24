@@ -8,6 +8,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 from posts.models import Group, Post
+from django.core.cache import cache
 
 
 # Класс тестирования постов содержащих в себе изобращение
@@ -56,6 +57,7 @@ class PostImageViewTest(TestCase):
 
     def test_context_index_page(self):
         """Проверяем context страницы index на наличие изображения"""
+        cache.clear()
         response = self.guest_client.get(reverse('index'))
         response_data_image = response.context['page'][0].image
         expected = f'posts/{self.uploaded.name}'
@@ -100,6 +102,7 @@ class PostImageViewTest(TestCase):
 
     def test_context_post_page(self):
         """Проверяем context страницы post на наличие изображения"""
+        cache.clear()
         response = self.guest_client.get(
             reverse('post', kwargs={'username': self.AUTH_USER_NAME,
                                     'post_id': self.post.pk
@@ -122,6 +125,7 @@ class PostImageViewTest(TestCase):
             'group': self.group.id,
             'image': self.uploaded.name,
         }
+        cache.clear()
         response = self.authorized_client.post(
             reverse('new_post'),
             data=form_data,

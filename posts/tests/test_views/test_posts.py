@@ -3,6 +3,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 from posts.models import Group, Post
+from django.core.cache import cache
 
 
 class PostsViewTests(TestCase):
@@ -32,13 +33,14 @@ class PostsViewTests(TestCase):
         )
 
     def setUp(self):
+
         self.guest_user = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
 
     def test_post_added_in_index_page(self):
         """Тестирование наличия поста на главной странице сайта"""
-
+        cache.clear()
         response = self.authorized_client.get(
             reverse('index'))
         post_id = response.context.get('page')[0].pk
@@ -50,6 +52,7 @@ class PostsViewTests(TestCase):
     def test_post_added_in_group_page(self):
         """Тестирование наличия поста присвоенного группе на странице группы"""
         post = Post.objects.first()
+
         response = self.authorized_client.get(
             reverse('group', kwargs={'slug': f'{self.GROUP_SLUG}1'}))
         self.assertEqual(post.text, response.context.get('page')[0].text,

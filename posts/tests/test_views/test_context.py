@@ -4,6 +4,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 from posts.models import Group, Post
+from django.core.cache import cache
 
 
 class ContextPageViewTests(TestCase):
@@ -37,7 +38,7 @@ class ContextPageViewTests(TestCase):
 
     def test_context_in_new_post_page(self):
         """ Тестирование содержания context в new_post"""
-
+        cache.clear()
         response = self.authorized_client.get(reverse('new_post'))
 
         form_fields = {
@@ -52,6 +53,7 @@ class ContextPageViewTests(TestCase):
 
     def test_context_in_index_page(self):
         """ Тестирование содержания context в index"""
+        cache.clear()
         response = self.authorized_client.get(reverse('index'))
 
         context_post = {

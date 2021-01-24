@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from .forms import CommentForm, PostForm
 from .models import Comment, Follow, Group, Post, User
+from django.views.decorators.cache import cache_page
 
 
 # функция педженатора
@@ -16,6 +17,7 @@ def post_paginator(request, post_list):
     return page, paginator
 
 
+@cache_page(20)
 def index(request):
     post_list = Post.objects.select_related('group')
     page, paginator = post_paginator(request, post_list)
