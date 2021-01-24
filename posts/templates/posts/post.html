@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block title %} Пост пользователя {{ post.author.get_full_name }} {% endblock %}
+{% block title %} Пост пользователя {{ author.get_full_name }} {% endblock %}
 {% block content %}
 
-              <div class="card-header d-flex justify-content-center ">  <H4> Запись пользователя {{ post.author.get_full_name}}</H4></div>
+              <div class="card-header d-flex justify-content-center ">  <H4> Запись пользователя {{ author.get_full_name}}</H4></div>
     <main role="main" class="container">
         <div class="row">
 

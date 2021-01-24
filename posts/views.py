@@ -148,16 +148,20 @@ def profile_unfollow(request, username):
 # страница профиля пользователя с списком постов
 def profile(request, username):
     author = get_object_or_404(User, username=username)
+    user_follow = Follow.objects.filter(
+            user=request.user, author=author).exists()
     following = False
-    if (request.user.is_authenticated and Follow.objects.filter(
-            user=request.user, author=author).exists()):
+    if request.user.is_authenticated and user_follow:
         following = True
 
     # лист подписчиков
+    followers_list = Follow.objects.filter(
+        author=author).select_related('user')
 
-    followers_list = Follow.objects.filter(author=author)
     followers_count = len(followers_list)
-    post_list = author.posts.select_related('author')
+    post_list = author.posts.select_related(
+        'author', 'group',).prefetch_related('comments')
+
     page, paginator = post_paginator(request, post_list)
 
     return render(request, 'posts/profile.html', {
