@@ -4,7 +4,6 @@ from django.test import TestCase
 from django.urls import reverse
 
 from posts.models import Post
-from django.core.cache import cache
 
 
 class PaginatorViewsTest(TestCase):
@@ -24,7 +23,7 @@ class PaginatorViewsTest(TestCase):
 
     def test_first_page_contains_ten_records(self):
         """Тестируем Paginator.Первые 10 постов на первой странице"""
-        cache.clear()
+
         response = self.client.get(reverse('index'))
         self.assertEqual(
             len(response.context.get('page').object_list),
@@ -33,7 +32,7 @@ class PaginatorViewsTest(TestCase):
 
     def test_second_page_contains_three_records(self):
         """Тестируем Paginator.Последние 3 поста на второй странице"""
-        cache.clear()
+
         response = self.client.get(reverse('index') + '?page=2')
         self.assertEqual(
             len(response.context['page'].object_list),

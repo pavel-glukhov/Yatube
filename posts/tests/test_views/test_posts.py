@@ -3,7 +3,6 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 from posts.models import Group, Post
-from django.core.cache import cache
 
 
 class PostsViewTests(TestCase):
@@ -40,7 +39,7 @@ class PostsViewTests(TestCase):
 
     def test_post_added_in_index_page(self):
         """Тестирование наличия поста на главной странице сайта"""
-        cache.clear()
+
         response = self.authorized_client.get(
             reverse('index'))
         post_id = response.context.get('page')[0].pk

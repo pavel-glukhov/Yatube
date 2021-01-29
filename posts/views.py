@@ -6,7 +6,6 @@ from django.urls import reverse
 
 from .forms import CommentForm, PostForm
 from .models import Follow, Group, Post, User
-from django.views.decorators.cache import cache_page
 
 
 # функция педженатора
@@ -17,7 +16,6 @@ def post_paginator(request, post_list):
     return page, paginator
 
 
-@cache_page(20)
 def index(request):
     post_list = Post.objects.select_related(
         "group", "author",).prefetch_related("comments")
@@ -148,20 +146,15 @@ def profile_unfollow(request, username):
 # страница профиля пользователя с списком постов
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    user_follow = Follow.objects.filter(
-            user=request.user, author=author).exists()
     following = False
-    if request.user.is_authenticated and user_follow:
+    if request.user.is_authenticated and \
+            Follow.objects.filter(user=request.user, author=author).exists():
         following = True
-
-    # лист подписчиков
-    followers_list = Follow.objects.filter(
-        author=author).select_related('user')
-
-    followers_count = len(followers_list)
-    post_list = author.posts.select_related(
-        'author', 'group',).prefetch_related('comments')
-
+        # лист подписчиков
+    followers_count = Follow.objects.filter(
+        author__username=username).select_related('follower').count()
+    followers_list = Follow.objects.filter(author=author)
+    post_list = author.posts.all()
     page, paginator = post_paginator(request, post_list)
 
     return render(request, 'posts/profile.html', {

@@ -25,7 +25,7 @@ class CacheViewTest(TestCase):
 
     def test_index_cache(self):
         """Тестирование работоспособности кеширования на странице Index"""
-        cache.clear()
+        # вызовем страницу для создания нового кеша.
         response = self.guest_user.get(reverse('index'))
         Post.objects.bulk_create([Post(text=f'Test{i}', author=self.user)
                                   for i in range(3)])

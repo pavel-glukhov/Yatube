@@ -3,7 +3,6 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 from posts.models import Group, Post
-from django.core.cache import cache
 
 
 class TemplateViewTests(TestCase):
@@ -46,7 +45,6 @@ class TemplateViewTests(TestCase):
 
         for template, reverse_name in templates_url_names.items():
             with self.subTest(reverse_name=reverse_name):
-                cache.clear()
                 response = self.authorized_client.get(reverse_name)
                 self.assertTemplateUsed(response, template,
                                         f'Проблема с шаблоном: {template}'
