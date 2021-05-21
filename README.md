@@ -1,8 +1,11 @@
-# Social Network
+# Социальная сеть
 
-Social network for bloggers. The project uses Python 3, Django and SQLite. This is a social network where users can create blogs, post them to groups, comment and follow other authors.
-Project structure
+Социальная сеть для блогеров. 
+В проекте используются Python 3, Django и SQLite.
 
-    about — static pages with information about the project and the author
-    posts — application for managing posts
-    users — application for managing users
+Это социальная сеть, где пользователи могут создавать блоги, публиковать их в группах, комментировать и подписываться на других авторов. Структура проекта 
+
+Приложения: 
+    posts — Управление постами и логикой блога
+    users — Управление пользователями
+    about — приложение для статичных информационных страниц
